@@ -11,7 +11,7 @@ class ProdutoFactory {
     return _database.insert(_tableProdutos, produto.getMap());
   }
 
-  Future<int> edita(int id, Produto newProduto) async {
+  Future<int> atualiza(int id, Produto newProduto) async {
     _database = await createDatabase();
     return _database.update(_tableProdutos, newProduto.getMap(),
         where: "id = ?", whereArgs: [id]);
