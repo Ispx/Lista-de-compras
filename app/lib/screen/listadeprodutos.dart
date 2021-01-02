@@ -13,37 +13,28 @@ class ListaDeProdutosState extends State<ListaDeProdutos> {
   @override
   Widget build(BuildContext buildContext) {
     blocProdutos.getProdutos();
-    return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height -
-            MediaQuery.of(context).size.height / 3,
-        child: StreamBuilder<List<Produto>>(
-          stream: blocProdutos.output,
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-              case ConnectionState.waiting:
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-                break;
-              case ConnectionState.active:
-                break;
-              case ConnectionState.done:
-                snapshot.data.forEach((element) {
-                  print(element.nome);
-                });
-                //return listBuilderProdutos(snapshot);
-                break;
-              default:
-                return Center(
-                  child: Text("Nenhum produto encotnrado"),
-                );
-            }
+    return StreamBuilder<List<Produto>>(
+      stream: blocProdutos.output,
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+            break;
+          case ConnectionState.active:
+            break;
+          case ConnectionState.done:
             return listBuilderProdutos(snapshot);
-          },
-        ),
-      ),
+            break;
+          default:
+            return Center(
+              child: Text("Nenhum produto encotnrado"),
+            );
+        }
+        return listBuilderProdutos(snapshot);
+      },
     );
   }
 
@@ -54,8 +45,9 @@ class ListaDeProdutosState extends State<ListaDeProdutos> {
       itemBuilder: (context, index) {
         Produto produto = snapshot.data[index];
         return ListTile(
-          leading: iconComponent(icon: Icons.shopping_cart, function: null),
-          title: Text(produto.nome),
+          leading:
+              iconComponent(icon: Icons.shopping_basket_sharp, function: null),
+          title: Text(produto.nome.toString().toUpperCase()),
           trailing: LayoutBuilder(
             builder: (context, constraint) => Container(
               width: constraint.maxWidth / 4,

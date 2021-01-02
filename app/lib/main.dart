@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:listadecompras/screen/listadeprodutos.dart';
+import 'package:listadecompras/models/produtos_factory.dart';
+import 'package:listadecompras/screen/minhaslistas.dart';
+import 'database/database.dart';
+import 'models/produto.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
+  ProdutoFactory().ler().then((produtos) {
+    produtos.forEach((produto) {
+      print(produto.getMap());
+    });
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -14,6 +22,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: ListaDeProdutos());
+        home: MinhasListas());
   }
 }

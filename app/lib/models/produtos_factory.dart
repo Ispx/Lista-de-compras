@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 
 class ProdutoFactory {
   Database _database;
-  final String _tableProdutos = "produtos";
+  final String _tableProdutos = "produto";
 
   Future<int> salvar(Produto produto) async {
     _database = await createDatabase();
@@ -14,7 +14,7 @@ class ProdutoFactory {
   Future<int> atualiza(int id, Produto newProduto) async {
     _database = await createDatabase();
     return _database.update(_tableProdutos, newProduto.getMap(),
-        where: "id = ?", whereArgs: [id]);
+        where: "produto_id = ?", whereArgs: [id]);
   }
 
   Future<List<Produto>> ler() async {
@@ -25,7 +25,7 @@ class ProdutoFactory {
 
     for (Map<String, dynamic> map in mapProdutos) {
       Produto produto = new Produto(
-        map['id'],
+        map['produto_id'],
         map['nome'],
         map['quantidade'],
       );
@@ -46,5 +46,11 @@ class ProdutoFactory {
     _database = await createDatabase();
 
     return _database.delete(_tableProdutos, where: "id = ?", whereArgs: [id]);
+  }
+
+  close() {
+    if (_database.isOpen) {
+      _database.close();
+    }
   }
 }

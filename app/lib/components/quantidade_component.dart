@@ -8,12 +8,13 @@ Widget quantidadeComponent(Produto produto) {
     width: 20,
     decoration: BoxDecoration(
       shape: BoxShape.circle,
-      color: Colors.black,
+      border: Border.all(),
+      //color: Colors.black,
     ),
     child: Align(
       child: Text(
         "" + produto.quantidade.toString(),
-        style: TextStyle(color: Colors.white, fontSize: 12),
+        style: TextStyle(color: Colors.black, fontSize: 12),
       ),
     ),
   );
