@@ -26,6 +26,8 @@ dependencies:
   sqflite: ^1.3.0
   bloc_pattern: ^2.3.2
   flutter_bloc: ^6.1.1
+  provider: ^4.3.2+3
+
 
 
 

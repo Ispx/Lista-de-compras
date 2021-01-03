@@ -8,7 +8,7 @@ Widget quantidadeComponent(Produto produto) {
     width: 20,
     decoration: BoxDecoration(
       shape: BoxShape.circle,
-      border: Border.all(),
+      border: Border.all(width: 2, color: Colors.black),
       //color: Colors.black,
     ),
     child: Align(

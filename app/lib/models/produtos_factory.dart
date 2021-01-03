@@ -24,11 +24,8 @@ class ProdutoFactory {
         await _database.query(_tableProdutos, orderBy: "nome ASC");
 
     for (Map<String, dynamic> map in mapProdutos) {
-      Produto produto = new Produto(
-        map['produto_id'],
-        map['nome'],
-        map['quantidade'],
-      );
+      Produto produto =
+          new Produto(map['produto_id'], map['nome'], map['quantidade']);
       listaDeProdutos.add(produto);
     }
     return listaDeProdutos;
@@ -45,7 +42,8 @@ class ProdutoFactory {
   Future<int> deletar(int id) async {
     _database = await createDatabase();
 
-    return _database.delete(_tableProdutos, where: "id = ?", whereArgs: [id]);
+    return _database
+        .delete(_tableProdutos, where: "produto_id = ?", whereArgs: [id]);
   }
 
   close() {

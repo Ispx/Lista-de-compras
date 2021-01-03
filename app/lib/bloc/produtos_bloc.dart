@@ -37,32 +37,28 @@ class ProdutosBloc implements BlocBase {
     getProdutos();
   }
 
+  void adicionaProduto(Produto produto) {
+    ProdutoFactory().salvar(produto);
+    getProdutos();
+  }
+
   void remove(Produto produto) {
     ProdutoFactory().deletar(produto.id);
     getProdutos();
   }
 
   @override
-  void addListener(listener) {
-    // TODO: implement addListener
-  }
+  void addListener(listener) {}
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-  }
+  void dispose() {}
 
   @override
-  // TODO: implement hasListeners
   bool get hasListeners => throw UnimplementedError();
 
   @override
-  void notifyListeners() {
-    // TODO: implement notifyListeners
-  }
+  void notifyListeners() {}
 
   @override
-  void removeListener(listener) {
-    // TODO: implement removeListener
-  }
+  void removeListener(listener) {}
 }

@@ -21,6 +21,9 @@ class Produto {
   setId(int id) => _id = id;
 
   void increment() {
+    if (_quantidade == 99) {
+      return;
+    }
     _quantidade++;
   }
 
