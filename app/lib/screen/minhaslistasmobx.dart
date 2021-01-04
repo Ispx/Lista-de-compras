@@ -1,20 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:listadecompras/bloc/produtos_bloc.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:listadecompras/components/icon_component.dart';
 import 'package:listadecompras/components/sizedbox_component.dart';
+import 'package:listadecompras/controllers/produtoscontroller.dart';
 import 'package:listadecompras/models/produto.dart';
 
-class MinhasListas extends StatefulWidget {
+class MinhasListasMobx extends StatefulWidget {
   @override
   _MinhasListasState createState() => _MinhasListasState();
 }
 
-class _MinhasListasState extends State<MinhasListas> {
-  final _produtosBloc = ProdutosBloc();
+class _MinhasListasState extends State<MinhasListasMobx> {
+  final _controllerMobx = ProdutosController();
   Widget build(BuildContext context) {
-    Produto produto = Produto();
-    _produtosBloc.ler();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple[700],
@@ -41,32 +40,17 @@ class _MinhasListasState extends State<MinhasListas> {
                 child:
                     sizedBoxComponent(child: formularioProduto(), height: 80),
               ),
-              StreamBuilder<List<Produto>>(
-                stream: _produtosBloc.output,
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                    case ConnectionState.waiting:
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    case ConnectionState.active:
-                      break;
-                    case ConnectionState.done:
-                      return sizedBoxComponent(
-                          height: infoScreen.maxHeight,
-                          child: listaDeProdutos(snapshot));
-                      break;
-                    default:
-                      return Center(
-                        child: Text("Nenhum produto encotnrado"),
-                      );
-                  }
-                  return sizedBoxComponent(
-                      height: infoScreen.maxHeight,
-                      child: listaDeProdutos(snapshot));
-                },
-              )
+              sizedBoxComponent(
+                height: infoScreen.maxHeight,
+                child: Observer(
+                  builder: (context) => FutureBuilder<List<Produto>>(
+                    initialData: [Produto()],
+                    future: _controllerMobx.listaDeProdutos,
+                    builder: (context, produtos) =>
+                        listaDeProdutos(produtos.data),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -94,8 +78,8 @@ class _MinhasListasState extends State<MinhasListas> {
             onPressed: () {
               if (_formKey.currentState.validate()) {
                 Produto produto = Produto();
-                produto.setNome(_controller.text.toString());
-                _produtosBloc.inserir(produto);
+                produto.setNome(_controller.text);
+                _controllerMobx.inserir(produto);
                 _formKey.currentState.reset();
               }
             },
@@ -111,12 +95,12 @@ class _MinhasListasState extends State<MinhasListas> {
     );
   }
 
-  listaDeProdutos(AsyncSnapshot<List<Produto>> snapshot) {
+  listaDeProdutos(List<Produto> snapshot) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
-      itemCount: snapshot.data.length,
+      itemCount: snapshot.length,
       itemBuilder: (context, index) {
-        Produto produto = snapshot.data[index];
+        Produto produto = snapshot[index];
         return Dismissible(
           key: ValueKey(produto),
           background: iconComponent(
@@ -144,7 +128,7 @@ class _MinhasListasState extends State<MinhasListas> {
                       FlatButton(
                         child: Text("Sim"),
                         onPressed: () {
-                          _produtosBloc.deletar(produto);
+                          _controllerMobx.deletar(produto);
                           Navigator.pop(context);
                         },
                       ),
@@ -183,19 +167,19 @@ class _MinhasListasState extends State<MinhasListas> {
                       iconComponent(
                         icon: Icons.add,
                         color: Colors.black,
-                        function: () => _produtosBloc.increment(produto),
+                        function: () => _controllerMobx.increment(produto),
                       ),
                       _quantidadeDeProdutos(produto),
                       iconComponent(
                         icon: Icons.remove,
                         color: Colors.black,
-                        function: () => _produtosBloc.decrement(produto),
+                        function: () => _controllerMobx.decrement(produto),
                       ),
                     ],
                   ),
                 ),
               ),
-              onLongPress: () => _produtosBloc.deletar(produto),
+              onLongPress: () => _controllerMobx.deletar(produto),
             ),
           ),
         );

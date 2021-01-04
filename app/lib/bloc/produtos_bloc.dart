@@ -13,9 +13,7 @@ class ProdutosBloc implements ModelFactory {
   Sink<List<Produto>> get input => _streamController.sink;
 
   void increment(Produto produto) {
-    print("Valor inicial: " + produto.quantidade.toString());
     produto.quantidade++;
-    print("Valor incrementado: " + produto.quantidade.toString());
     ProdutoFactory().atualizar(produto.id, produto);
     ler();
   }
@@ -31,7 +29,6 @@ class ProdutosBloc implements ModelFactory {
 
   @override
   Future<int> atualizar(int id, values) {
-    // TODO: implement atualizar
     throw UnimplementedError();
   }
 
