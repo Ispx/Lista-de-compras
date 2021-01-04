@@ -58,7 +58,7 @@ class _ListaDeComprasBlocState extends State<ListaDeCOmprasBloc> {
                       break;
                     default:
                       return Center(
-                        child: Text("Nenhum produto encotnrado"),
+                        child: Text("Nenhum produto encotrado"),
                       );
                   }
                   return sizedBoxComponent(
