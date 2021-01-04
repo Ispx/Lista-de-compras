@@ -6,12 +6,12 @@ import 'package:listadecompras/components/sizedbox_component.dart';
 import 'package:listadecompras/controllers/produtoscontroller.dart';
 import 'package:listadecompras/models/produto.dart';
 
-class MinhasListasMobx extends StatefulWidget {
+class ListaDeCOmpras extends StatefulWidget {
   @override
-  _MinhasListasState createState() => _MinhasListasState();
+  _ListaDeCOmprasState createState() => _ListaDeCOmprasState();
 }
 
-class _MinhasListasState extends State<MinhasListasMobx> {
+class _ListaDeCOmprasState extends State<ListaDeCOmpras> {
   final _controllerMobx = ProdutosController();
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +19,7 @@ class _MinhasListasState extends State<MinhasListasMobx> {
         backgroundColor: Colors.purple[700],
         leading: Icon(Icons.shopping_basket),
         title: Text(
-          "Minhas Listas de Compras",
+          "Lista de Compras",
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),

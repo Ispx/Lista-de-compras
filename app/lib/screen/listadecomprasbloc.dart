@@ -13,14 +13,13 @@ class ListaDeCOmprasBloc extends StatefulWidget {
 class _ListaDeComprasBlocState extends State<ListaDeCOmprasBloc> {
   final _produtosBloc = ProdutosBloc();
   Widget build(BuildContext context) {
-    Produto produto = Produto();
     _produtosBloc.ler();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple[700],
         leading: Icon(Icons.shopping_basket),
         title: Text(
-          "Minhas Listas de Compras",
+          "Lista de Compras",
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
