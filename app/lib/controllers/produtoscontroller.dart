@@ -9,16 +9,12 @@ abstract class ProdutosControllerBase with Store {
   @observable
   Future<List<Produto>> listaDeProdutos;
 
-  @observable
-  int quantidade = 1;
-
   ProdutosControllerBase() {
     listaDeProdutos = _obterListaDeProdutos();
   }
 
   @action
   Future<int> increment(Produto produto) async {
-    quantidade = produto.quantidade++;
     ProdutoFactory().atualizar(produto.id, produto);
     listaDeProdutos = _obterListaDeProdutos();
 

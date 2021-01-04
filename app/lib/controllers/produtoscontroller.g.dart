@@ -25,21 +25,6 @@ mixin _$ProdutosController on ProdutosControllerBase, Store {
     });
   }
 
-  final _$quantidadeAtom = Atom(name: 'ProdutosControllerBase.quantidade');
-
-  @override
-  int get quantidade {
-    _$quantidadeAtom.reportRead();
-    return super.quantidade;
-  }
-
-  @override
-  set quantidade(int value) {
-    _$quantidadeAtom.reportWrite(value, super.quantidade, () {
-      super.quantidade = value;
-    });
-  }
-
   final _$incrementAsyncAction =
       AsyncAction('ProdutosControllerBase.increment');
 
@@ -82,8 +67,7 @@ mixin _$ProdutosController on ProdutosControllerBase, Store {
   @override
   String toString() {
     return '''
-listaDeProdutos: ${listaDeProdutos},
-quantidade: ${quantidade}
+listaDeProdutos: ${listaDeProdutos}
     ''';
   }
 }
