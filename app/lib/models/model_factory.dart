@@ -1,5 +1,3 @@
-import 'package:listadecompras/models/produto.dart';
-
 abstract class ModelFactory {
   Future<int> inserir(dynamic values);
 

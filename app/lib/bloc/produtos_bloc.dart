@@ -21,9 +21,7 @@ class ProdutosBloc implements ModelFactory {
   }
 
   void decrement(Produto produto) {
-    if (produto.quantidade == 0) {
-      ProdutoFactory().atualizar(produto.id, produto);
-      ler();
+    if (produto.quantidade == 1) {
       return;
     }
     produto.quantidade--;
