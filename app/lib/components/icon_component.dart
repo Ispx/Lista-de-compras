@@ -3,12 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 Widget iconComponent(
-    {@required IconData icon, Color color, Function() function}) {
+    {@required IconData icon,
+    Color color,
+    EdgeInsets padding,
+    Alignment alignment,
+    Function() function}) {
   return InkWell(
-    child: Icon(
-      icon,
-      size: 20,
-      color: color,
+    child: Container(
+      alignment: alignment,
+      padding: padding,
+      child: Icon(
+        icon,
+        size: 20,
+        color: color,
+      ),
     ),
     onTap: function,
   );

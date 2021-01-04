@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:listadecompras/bloc/produtos_bloc.dart';
 import 'package:listadecompras/components/icon_component.dart';
-import 'package:listadecompras/components/quantidade_component.dart';
+import 'package:listadecompras/components/sizedbox_component.dart';
 import 'package:listadecompras/models/produto.dart';
 
 class MinhasListas extends StatefulWidget {
@@ -13,7 +13,7 @@ class MinhasListas extends StatefulWidget {
 class _MinhasListasState extends State<MinhasListas> {
   final _produtosBloc = ProdutosBloc();
   Widget build(BuildContext context) {
-    _produtosBloc.getProdutos();
+    _produtosBloc.ler();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple[700],
@@ -33,38 +33,39 @@ class _MinhasListasState extends State<MinhasListas> {
           ),
         ),
         child: LayoutBuilder(
-          builder: (context, constraint) => ListView(
+          builder: (context, infoScreen) => ListView(
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 8, right: 8),
-                child: sizedBoxWidget(child: formulario(), height: 80),
+                child:
+                    sizedBoxComponent(child: formularioProduto(), height: 80),
               ),
               StreamBuilder<List<Produto>>(
-                  stream: _produtosBloc.output,
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                      case ConnectionState.waiting:
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      case ConnectionState.active:
-                        break;
-                      case ConnectionState.done:
-                        return sizedBoxWidget(
-                            height: constraint.maxHeight,
-                            child: listBuilderProdutos(snapshot));
-                        break;
-                      default:
-                        return Center(
-                          child: Text("Nenhum produto encotnrado"),
-                        );
-                    }
-
-                    return sizedBoxWidget(
-                        height: constraint.maxHeight,
-                        child: listBuilderProdutos(snapshot));
-                  })
+                stream: _produtosBloc.output,
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                    case ConnectionState.waiting:
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    case ConnectionState.active:
+                      break;
+                    case ConnectionState.done:
+                      return sizedBoxComponent(
+                          height: infoScreen.maxHeight,
+                          child: listaDeProdutos(snapshot));
+                      break;
+                    default:
+                      return Center(
+                        child: Text("Nenhum produto encotnrado"),
+                      );
+                  }
+                  return sizedBoxComponent(
+                      height: infoScreen.maxHeight,
+                      child: listaDeProdutos(snapshot));
+                },
+              )
             ],
           ),
         ),
@@ -72,14 +73,7 @@ class _MinhasListasState extends State<MinhasListas> {
     );
   }
 
-  Widget sizedBoxWidget({Widget child, double height}) {
-    return SizedBox(
-      height: height,
-      child: child,
-    );
-  }
-
-  formulario() {
+  formularioProduto() {
     final TextEditingController _controller = TextEditingController();
     final _formKey = GlobalKey<FormState>();
     return Form(
@@ -88,7 +82,7 @@ class _MinhasListasState extends State<MinhasListas> {
         controller: _controller,
         validator: (value) {
           if (value.length == 2 || value.trim().isEmpty) {
-            return "Texto inválido";
+            return "Produto inválido";
           }
           return null;
         },
@@ -98,8 +92,9 @@ class _MinhasListasState extends State<MinhasListas> {
             child: Text("Adicionar"),
             onPressed: () {
               if (_formKey.currentState.validate()) {
-                Produto produto = Produto(null, _controller.text, 1);
-                _produtosBloc.adicionaProduto(produto);
+                Produto produto = Produto();
+                produto.quantidade();
+                _produtosBloc.inserir(produto);
                 _formKey.currentState.reset();
               }
             },
@@ -115,7 +110,7 @@ class _MinhasListasState extends State<MinhasListas> {
     );
   }
 
-  listBuilderProdutos(AsyncSnapshot<List<Produto>> snapshot) {
+  listaDeProdutos(AsyncSnapshot<List<Produto>> snapshot) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       itemCount: snapshot.data.length,
@@ -123,13 +118,13 @@ class _MinhasListasState extends State<MinhasListas> {
         Produto produto = snapshot.data[index];
         return Dismissible(
           key: ValueKey(produto),
-          background: dimissibleIcon(
-              background: Colors.red,
+          background: iconComponent(
+              color: Colors.red,
               alignment: Alignment.centerLeft,
               icon: Icons.delete,
               padding: EdgeInsets.only(left: 20)),
-          secondaryBackground: dimissibleIcon(
-              background: Colors.green,
+          secondaryBackground: iconComponent(
+              color: Colors.green,
               alignment: Alignment.centerRight,
               icon: Icons.check,
               padding: EdgeInsets.only(right: 20)),
@@ -148,7 +143,7 @@ class _MinhasListasState extends State<MinhasListas> {
                       FlatButton(
                         child: Text("Sim"),
                         onPressed: () {
-                          _produtosBloc.remove(produto);
+                          _produtosBloc.deletar(produto);
                           Navigator.pop(context);
                         },
                       ),
@@ -189,7 +184,7 @@ class _MinhasListasState extends State<MinhasListas> {
                         color: Colors.black,
                         function: () => _produtosBloc.increment(produto),
                       ),
-                      quantidadeComponent(produto),
+                      _quantidadeDeProdutos(produto),
                       iconComponent(
                         icon: Icons.remove,
                         color: Colors.black,
@@ -199,7 +194,7 @@ class _MinhasListasState extends State<MinhasListas> {
                   ),
                 ),
               ),
-              onLongPress: () => _produtosBloc.remove(produto),
+              onLongPress: () => _produtosBloc.deletar(produto),
             ),
           ),
         );
@@ -207,19 +202,19 @@ class _MinhasListasState extends State<MinhasListas> {
     );
   }
 
-  Container dimissibleIcon(
-      {Color background,
-      Alignment alignment,
-      IconData icon,
-      EdgeInsets padding}) {
+  Widget _quantidadeDeProdutos(Produto produto) {
     return Container(
-      color: background,
-      padding: padding,
+      height: 20,
+      width: 20,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(width: 2, color: Colors.black),
+        //color: Colors.black,
+      ),
       child: Align(
-        alignment: alignment,
-        child: Icon(
-          icon,
-          color: Colors.white,
+        child: Text(
+          "" + produto.quantidade.toString(),
+          style: TextStyle(color: Colors.black, fontSize: 12),
         ),
       ),
     );

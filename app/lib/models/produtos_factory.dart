@@ -1,52 +1,43 @@
 import 'package:listadecompras/database/database.dart';
-import 'package:listadecompras/models/produto.dart';
+import 'package:listadecompras/models/model_factory.dart';
 import 'package:sqflite/sqflite.dart';
 
-class ProdutoFactory {
+class ProdutoFactory implements ModelFactory {
   Database _database;
-  final String _tableProdutos = "produto";
+  final String _TABELA_PRODUTO = "produto";
 
-  Future<int> salvar(Produto produto) async {
+  @override
+  Future<int> inserir(produto) async {
     _database = await createDatabase();
-    return _database.insert(_tableProdutos, produto.getMap());
+    return _database.insert(_TABELA_PRODUTO, produto.toMap());
   }
 
-  Future<int> atualiza(int id, Produto newProduto) async {
+  @override
+  Future<int> atualizar(int id, novoProduto) async {
     _database = await createDatabase();
-    return _database.update(_tableProdutos, newProduto.getMap(),
+    return _database.update(_TABELA_PRODUTO, novoProduto.toMap(),
         where: "produto_id = ?", whereArgs: [id]);
   }
 
-  Future<List<Produto>> ler() async {
-    _database = await createDatabase();
-    List<Produto> listaDeProdutos = List<Produto>();
-    List<Map<String, dynamic>> mapProdutos =
-        await _database.query(_tableProdutos, orderBy: "nome ASC");
-
-    for (Map<String, dynamic> map in mapProdutos) {
-      Produto produto =
-          new Produto(map['produto_id'], map['nome'], map['quantidade']);
-      listaDeProdutos.add(produto);
-    }
-    return listaDeProdutos;
-  }
-
-  Future<List<Map<String, dynamic>>> obterProdutos() async {
+  @override
+  Future<List<Map<String, dynamic>>> ler() async {
     _database = await createDatabase();
     List<Map<String, dynamic>> mapProdutos =
-        await _database.query(_tableProdutos, orderBy: "nome ASC");
+        await _database.query(_TABELA_PRODUTO, orderBy: "nome ASC");
 
     return mapProdutos;
   }
 
-  Future<int> deletar(int id) async {
+  @override
+  Future<int> deletar(id) async {
     _database = await createDatabase();
 
     return _database
-        .delete(_tableProdutos, where: "produto_id = ?", whereArgs: [id]);
+        .delete(_TABELA_PRODUTO, where: "produto_id = ?", whereArgs: [id]);
   }
 
-  close() {
+  @override
+  fechar() {
     if (_database.isOpen) {
       _database.close();
     }

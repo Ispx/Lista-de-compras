@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:listadecompras/models/model_factory.dart';
 import 'package:listadecompras/models/produto.dart';
 import 'package:listadecompras/models/produtos_factory.dart';
 
-class ProdutosBloc implements BlocBase {
+class ProdutosBloc implements ModelFactory {
   StreamController<List<Produto>> _streamController =
       StreamController<List<Produto>>();
 
@@ -12,53 +12,62 @@ class ProdutosBloc implements BlocBase {
 
   Sink<List<Produto>> get input => _streamController.sink;
 
-  void getProdutos() {
-    ProdutoFactory()
-        .ler()
-        .then((listaDeProdutos) => input.add(listaDeProdutos));
-  }
-
   void increment(Produto produto) {
     print("Valor inicial: " + produto.quantidade.toString());
     produto.quantidade++;
     print("Valor incrementado: " + produto.quantidade.toString());
-    ProdutoFactory().atualiza(produto.id, produto);
-    getProdutos();
+    ProdutoFactory().atualizar(produto.id, produto);
+    ler();
   }
 
   void decrement(Produto produto) {
     if (produto.quantidade == 0) {
-      ProdutoFactory().atualiza(produto.id, produto);
-      getProdutos();
+      ProdutoFactory().atualizar(produto.id, produto);
+      ler();
       return;
     }
     produto.quantidade--;
-    ProdutoFactory().atualiza(produto.id, produto);
-    getProdutos();
-  }
-
-  void adicionaProduto(Produto produto) {
-    ProdutoFactory().salvar(produto);
-    getProdutos();
-  }
-
-  void remove(Produto produto) {
-    ProdutoFactory().deletar(produto.id);
-    getProdutos();
+    ProdutoFactory().atualizar(produto.id, produto);
+    ler();
   }
 
   @override
-  void addListener(listener) {}
+  Future<int> atualizar(int id, values) {
+    // TODO: implement atualizar
+    throw UnimplementedError();
+  }
 
   @override
-  void dispose() {}
+  Future<int> deletar(produto) async {
+    int id = await ProdutoFactory().deletar(produto.id);
+    ler();
+    return id;
+  }
 
   @override
-  bool get hasListeners => throw UnimplementedError();
+  fechar() {
+    if (!_streamController.isClosed) {
+      _streamController.close();
+    }
+  }
 
   @override
-  void notifyListeners() {}
+  Future<List<Map<String, dynamic>>> ler() async {
+    List<Map<String, dynamic>> produtos = await ProdutoFactory().ler();
+    List<Produto> listaDeProdutos = List<Produto>();
+    for (Map<String, dynamic> map in produtos) {
+      Produto produto = Produto();
+      produto.fromMap(map);
+      listaDeProdutos.add(produto);
+    }
+    input.add(listaDeProdutos);
+    return produtos;
+  }
 
   @override
-  void removeListener(listener) {}
+  Future<int> inserir(produto) async {
+    int id = await ProdutoFactory().inserir(produto);
+    ler();
+    return id;
+  }
 }
