@@ -5,12 +5,12 @@ import 'package:listadecompras/components/icon_component.dart';
 import 'package:listadecompras/components/sizedbox_component.dart';
 import 'package:listadecompras/models/produto.dart';
 
-class MinhasListas extends StatefulWidget {
+class ListaDeCOmprasBloc extends StatefulWidget {
   @override
-  _MinhasListasState createState() => _MinhasListasState();
+  _ListaDeComprasBlocState createState() => _ListaDeComprasBlocState();
 }
 
-class _MinhasListasState extends State<MinhasListas> {
+class _ListaDeComprasBlocState extends State<ListaDeCOmprasBloc> {
   final _produtosBloc = ProdutosBloc();
   Widget build(BuildContext context) {
     Produto produto = Produto();
