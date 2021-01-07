@@ -6,6 +6,8 @@ part "produtoscontroller.g.dart";
 class ProdutosController = ProdutosControllerBase with _$ProdutosController;
 
 abstract class ProdutosControllerBase with Store {
+  ProdutoFactory _produtoFactory = ProdutoFactory();
+
   @observable
   Future<List<Produto>> listaDeProdutos;
 
@@ -15,7 +17,7 @@ abstract class ProdutosControllerBase with Store {
 
   @action
   Future<int> increment(Produto produto) async {
-    ProdutoFactory().atualizar(produto.id, produto);
+    _produtoFactory.atualizar(produto.id, produto);
     listaDeProdutos = _obterListaDeProdutos();
 
     return 0;
@@ -27,21 +29,21 @@ abstract class ProdutosControllerBase with Store {
       return 0;
     }
     produto.quantidade--;
-    ProdutoFactory().atualizar(produto.id, produto);
+    _produtoFactory.atualizar(produto.id, produto);
     listaDeProdutos = _obterListaDeProdutos();
     return 0;
   }
 
   @action
   Future<int> deletar(produto) async {
-    int id = await ProdutoFactory().deletar(produto.id);
+    int id = await _produtoFactory.deletar(produto.id);
     listaDeProdutos = _obterListaDeProdutos();
     return id;
   }
 
   @action
   Future<List<Produto>> _obterListaDeProdutos() async {
-    List<Map<String, dynamic>> produtos = await ProdutoFactory().ler();
+    List<Map<String, dynamic>> produtos = await _produtoFactory.ler();
     List<Produto> listaDeProdutos = List<Produto>();
     for (Map<String, dynamic> map in produtos) {
       Produto produto = Produto();
@@ -53,7 +55,7 @@ abstract class ProdutosControllerBase with Store {
 
   @action
   Future<dynamic> inserir(produto) async {
-    await ProdutoFactory().inserir(produto);
+    await _produtoFactory.inserir(produto);
     listaDeProdutos = _obterListaDeProdutos();
   }
 }

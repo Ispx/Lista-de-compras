@@ -12,6 +12,7 @@ class ListaDeCOmpras extends StatefulWidget {
 }
 
 class _ListaDeCOmprasState extends State<ListaDeCOmpras> {
+  bool _panelExpanded = false;
   final _controllerMobx = ProdutosController();
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,8 +47,10 @@ class _ListaDeCOmprasState extends State<ListaDeCOmpras> {
                   builder: (context) => FutureBuilder<List<Produto>>(
                     initialData: [Produto()],
                     future: _controllerMobx.listaDeProdutos,
-                    builder: (context, produtos) =>
-                        listaDeProdutos(produtos.data),
+                    builder: (context, produtos) {
+                      return _expansionPanelListProdutos(
+                          context, produtos, infoScreen);
+                    },
                   ),
                 ),
               ),
@@ -95,95 +98,195 @@ class _ListaDeCOmprasState extends State<ListaDeCOmpras> {
     );
   }
 
-  listaDeProdutos(List<Produto> snapshot) {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: snapshot.length,
-      itemBuilder: (context, index) {
-        Produto produto = snapshot[index];
-        return Dismissible(
-          key: ValueKey(produto),
-          background: iconComponent(
-              color: Colors.red,
-              alignment: Alignment.centerLeft,
-              icon: Icons.delete,
-              padding: EdgeInsets.only(left: 20)),
-          secondaryBackground: iconComponent(
-              color: Colors.green,
-              alignment: Alignment.centerRight,
-              icon: Icons.check,
-              padding: EdgeInsets.only(right: 20)),
-          onDismissed: (direction) {
-            return DismissDirection.startToEnd;
-          },
-          confirmDismiss: (direction) async {
-            if (DismissDirection.startToEnd == direction) {
-              return showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text("Deletar item: " +
-                        produto.nome.toString().toUpperCase()),
-                    actions: [
-                      FlatButton(
-                        child: Text("Sim"),
-                        onPressed: () {
-                          _controllerMobx.deletar(produto);
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text("Não"),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
-                  );
+  listaDeProdutos(BuildContext context, List<Produto> snapshot) {
+    return ExpansionPanelList(
+      children: [
+        ExpansionPanel(
+          headerBuilder: (context, isExpanded) =>
+              Text("Comprar no supermercado"),
+          body: ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: snapshot.length,
+            itemBuilder: (context, index) {
+              Produto produto = snapshot[index];
+              return Dismissible(
+                key: ValueKey(produto),
+                background: iconComponent(
+                    color: Colors.red,
+                    alignment: Alignment.centerLeft,
+                    icon: Icons.delete,
+                    padding: EdgeInsets.only(left: 20)),
+                secondaryBackground: iconComponent(
+                    color: Colors.green,
+                    alignment: Alignment.centerRight,
+                    icon: Icons.check,
+                    padding: EdgeInsets.only(right: 20)),
+                onDismissed: (direction) {
+                  return DismissDirection.startToEnd;
                 },
-              );
-            }
-            return false;
-          },
-          child: Container(
-            decoration: BoxDecoration(
-                border:
-                    Border(bottom: BorderSide(color: Colors.grey, width: 1))),
-            child: ListTile(
-              leading: iconComponent(
-                  icon: Icons.shopping_basket_sharp,
-                  color: Colors.orange,
-                  function: null),
-              title: Text(
-                produto.nome.toString().toUpperCase(),
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              trailing: LayoutBuilder(
-                builder: (context, constraint) => Container(
-                  width: constraint.maxWidth / 4,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      iconComponent(
-                        icon: Icons.add,
-                        color: Colors.black,
-                        function: () => _controllerMobx.increment(produto),
+                confirmDismiss: (direction) async {
+                  if (DismissDirection.startToEnd == direction) {
+                    return showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Deletar item: " +
+                              produto.nome.toString().toUpperCase()),
+                          actions: [
+                            FlatButton(
+                              child: Text("Sim"),
+                              onPressed: () {
+                                _controllerMobx.deletar(produto);
+                                Navigator.pop(context);
+                              },
+                            ),
+                            FlatButton(
+                              child: Text("Não"),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                  return false;
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(color: Colors.grey, width: 1))),
+                  child: ListTile(
+                    leading: iconComponent(
+                        icon: Icons.shopping_basket_sharp,
+                        color: Colors.orange,
+                        function: null),
+                    title: Text(
+                      produto.nome.toString().toUpperCase(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
                       ),
-                      _quantidadeDeProdutos(produto),
-                      iconComponent(
-                        icon: Icons.remove,
-                        color: Colors.black,
-                        function: () => _controllerMobx.decrement(produto),
+                    ),
+                    trailing: LayoutBuilder(
+                      builder: (context, constraint) => Container(
+                        width: constraint.maxWidth / 4,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            iconComponent(
+                              icon: Icons.add,
+                              color: Colors.black,
+                              function: () =>
+                                  _controllerMobx.increment(produto),
+                            ),
+                            _quantidadeDeProdutos(produto),
+                            iconComponent(
+                              icon: Icons.remove,
+                              color: Colors.black,
+                              function: () =>
+                                  _controllerMobx.decrement(produto),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-              onLongPress: () => _controllerMobx.deletar(produto),
-            ),
+              );
+            },
           ),
-        );
-      },
+        ),
+      ],
+    );
+  }
+
+  _expansionPanelListProdutos(BuildContext context,
+      AsyncSnapshot<List<Produto>> produtos, BoxConstraints infoScreen) {
+    return SingleChildScrollView(
+      child: Observer(
+        builder: (context) => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ExpansionPanelList(
+            expansionCallback: (panelIndex, isExpanded) {
+              setState(() {
+                _panelExpanded = !isExpanded;
+              });
+            },
+            children: [
+              ExpansionPanel(
+                isExpanded: _panelExpanded,
+                backgroundColor: Colors.purple[500],
+                headerBuilder: (context, isExpanded) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Lista de Compras",
+                      style: TextStyle(
+                        color: Colors.yellow,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  );
+                },
+                body: sizedBoxComponent(
+                  height: infoScreen.maxHeight / 2,
+                  child: Container(
+                    width: infoScreen.maxWidth,
+                    height: infoScreen.maxHeight / 2,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(2),
+                            bottomRight: Radius.circular(2))),
+                    child: ListView.builder(
+                      itemCount: produtos.data.length,
+                      itemBuilder: (context, index) {
+                        Produto produto = produtos.data[index];
+                        return ListTile(
+                          leading: iconComponent(
+                              icon: Icons.shopping_basket_sharp,
+                              color: Colors.orange,
+                              function: null),
+                          title: Text(
+                            produto.nome.toString().toUpperCase(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          trailing: LayoutBuilder(
+                            builder: (context, constraint) => Container(
+                              width: constraint.maxWidth / 4,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  iconComponent(
+                                    icon: Icons.add,
+                                    color: Colors.black,
+                                    function: () =>
+                                        _controllerMobx.increment(produto),
+                                  ),
+                                  _quantidadeDeProdutos(produto),
+                                  iconComponent(
+                                    icon: Icons.remove,
+                                    color: Colors.black,
+                                    function: () =>
+                                        _controllerMobx.decrement(produto),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 

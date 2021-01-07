@@ -10,6 +10,7 @@ class Produto {
   }
 
   get nome => this._nome;
+
   setNome(String nome) {
     this._nome = nome;
   }

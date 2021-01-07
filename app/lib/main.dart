@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:listadecompras/models/produtos_factory.dart';
 import 'package:listadecompras/screen/listadecompras.dart';
 
 void main() async {
   runApp(MyApp());
+
+  ProdutoFactory produtoFactory = ProdutoFactory();
+  produtoFactory.ler().then((element) {
+    element.forEach((element) {
+      print(element.toString());
+    });
+  });
 }
 
 class MyApp extends StatelessWidget {
