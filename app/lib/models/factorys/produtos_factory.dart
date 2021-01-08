@@ -5,13 +5,10 @@ import 'package:sqflite/sqflite.dart';
 class ProdutoFactory implements ModelFactory {
   Future<Database> _futureDb;
   Database _database;
-  final String _TABLENAME = "produto";
+  final _TABLENAME = "produto";
 
   ProdutoFactory() {
-    _futureDb = createTableDatabase(
-        sql:
-            "CREATE TABLE IF NOT EXISTS produto(produto_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, quantidade INTEGER NOT NULL)",
-        versao: 1);
+    _futureDb = createTableDatabaseApp();
   }
 
   @override
@@ -48,5 +45,11 @@ class ProdutoFactory implements ModelFactory {
     if (_database.isOpen) {
       _database.close();
     }
+  }
+
+  @override
+  Future<Map> getItem(id) {
+    // TODO: implement getItem
+    throw UnimplementedError();
   }
 }

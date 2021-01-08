@@ -1,4 +1,5 @@
 abstract class ModelFactory {
+  Future<Map> getItem(id);
   Future<int> inserir(dynamic values);
 
   Future<int> atualizar(int id, dynamic values);

@@ -1,22 +1,24 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-Future<Database> createTableDatabase({String sql, int versao}) async {
-  final String path = await getDatabasesPath();
-  final String nomeDb = 'dados.db';
-  return openDatabase(join(path, nomeDb), onCreate: (db, version) {
-    return db.execute(sql);
-  }, version: versao);
-}
+List<String> _sqlTables = [
+  "CREATE TABLE IF NOT EXISTS lista(lista_id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS produto(produto_id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, quantidade INTEGER NOT NULL, fk_lista INTEGER NOT NULL)",
+];
 
-/*
-Future<Database> createDatabase(
-    {String nomeBancoDeDados, String sql, int version}) async {
+Future<Database> createTableDatabaseApp() async {
   final String path = await getDatabasesPath();
-  final String nomeDb = "dados.db";
+  final String nomeDb = "listadecompras.db";
   return openDatabase(join(path, nomeDb), onCreate: (db, version) {
-    return db.execute(
-        "CREATE TABLE IF NOT EXISTS produto(produto_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, quantidade INTEGER NOT NULL)");
+    _sqlTables.forEach((sql) {
+      db.execute(sql);
+    });
+    return db;
   }, version: 1);
 }
-*/
+
+Future<void> deleteDatabaseApp() async {
+  final String path = await getDatabasesPath();
+  final String nomeDb = 'compras.db';
+  return await deleteDatabase(join(path, nomeDb));
+}
