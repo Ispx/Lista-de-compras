@@ -1,5 +1,5 @@
 import 'package:listadecompras/models/produto.dart';
-import 'package:listadecompras/models/produtos_factory.dart';
+import 'package:listadecompras/models/factorys/produtos_factory.dart';
 import 'package:mobx/mobx.dart';
 part "produtoscontroller.g.dart";
 

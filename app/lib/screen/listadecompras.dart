@@ -213,6 +213,7 @@ class _ListaDeCOmprasState extends State<ListaDeCOmpras> {
             },
             children: [
               ExpansionPanel(
+                canTapOnHeader: true,
                 isExpanded: _panelExpanded,
                 backgroundColor: Colors.purple[500],
                 headerBuilder: (context, isExpanded) {

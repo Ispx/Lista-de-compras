@@ -1,10 +1,9 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-Future<Database> createDatabase(
-    {String nomeBancoDeDados, String sql, int versao}) async {
+Future<Database> createTableDatabase({String sql, int versao}) async {
   final String path = await getDatabasesPath();
-  final String nomeDb = nomeBancoDeDados;
+  final String nomeDb = 'dados.db';
   return openDatabase(join(path, nomeDb), onCreate: (db, version) {
     return db.execute(sql);
   }, version: versao);

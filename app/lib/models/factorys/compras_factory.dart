@@ -3,13 +3,13 @@ import 'package:listadecompras/models/model_factory.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ComprasFactory implements ModelFactory {
-  Future<Database> _database;
-
+  Future<Database> _futureDb;
+  Database _database;
+  final _TABLENAME = 'compras';
   ComprasFactory() {
-    this._database = createDatabase(
-        nomeBancoDeDados: 'compras.db',
+    this._futureDb = createTableDatabase(
         sql:
-            'CREATE TABLE IF NOT EXISTS compras(compras_id INTEGER NOT NULL, nome TEXT NOT NULL, fk_produto INTEGER NOT NULL, FOREIGN KEY(fk_produto) REFERENCES produto(produto_id))',
+            'CREATE TABLE IF NOT EXISTS compras(compras_id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL)',
         versao: 1);
   }
 
@@ -29,12 +29,15 @@ class ComprasFactory implements ModelFactory {
   }
 
   @override
-  Future<int> inserir(values) {
-    throw UnimplementedError();
+  Future<int> inserir(values) async {
+    this._database = await this._futureDb;
+    return this._database.insert(_TABLENAME, values);
   }
 
   @override
-  Future<List<Map<String, dynamic>>> ler() {
-    throw UnimplementedError();
+  Future<List<Map<String, dynamic>>> ler() async {
+    this._database = await this._futureDb;
+
+    return await this._database.query(_TABLENAME);
   }
 }
