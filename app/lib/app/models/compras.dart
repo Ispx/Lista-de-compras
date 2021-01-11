@@ -1,5 +1,3 @@
-import 'package:listadecompras/models/produto.dart';
-
 class Compras {
   int _id;
   String _nome;

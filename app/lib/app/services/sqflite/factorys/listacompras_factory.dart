@@ -1,14 +1,14 @@
-import 'package:listadecompras/database/createdatabase.dart';
-import 'package:listadecompras/models/model_factory.dart';
+import 'package:listadecompras/app/interfaces/databasefactory_interface.dart';
+import 'package:listadecompras/app/services/sqflite/createdatabase.dart';
 import 'package:sqflite/sqflite.dart';
 
-class ListaComprasFactory implements ModelFactory {
+class ListaComprasFactory implements IDatabaseFactory {
   final _TABLENAME = 'lista';
   Future<Database> _futureDatabase;
   Database _database;
 
   ListaComprasFactory() {
-    this._futureDatabase = createTableDatabaseApp();
+    this._futureDatabase = CreateDatabaseService.instance.createDatabaseApp();
   }
 
   @override

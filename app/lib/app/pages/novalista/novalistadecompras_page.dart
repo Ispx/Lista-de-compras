@@ -1,27 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:listadecompras/components/icon_component.dart';
-import 'package:listadecompras/components/sizedbox_component.dart';
-import 'package:listadecompras/controllers/listaprodutoscontroller.dart';
-import 'package:listadecompras/models/produto.dart';
+import 'package:listadecompras/app/components/icon_component.dart';
+import 'package:listadecompras/app/components/sizedbox_component.dart';
+import 'package:listadecompras/app/models/produto.dart';
 
-class ListaDeCompras extends StatefulWidget {
+import 'novalistadecompras_controller.dart';
+
+class NovaListaPage extends StatefulWidget {
   @override
-  _ListaDeComprasState createState() => _ListaDeComprasState();
+  _NovaListaPageState createState() => _NovaListaPageState();
 }
 
-class _ListaDeComprasState extends State<ListaDeCompras> {
-  final _produtosController = ListaProdutosController();
+class _NovaListaPageState extends State<NovaListaPage> {
+  final _produtosController = NovaListaDeComprasController();
   final produtos = List<Produto>();
+
   Widget build(BuildContext contextPrincipal) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple[700],
-        title: Text(
-          "Lista de Compras",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
+        title: Text("Nova Lista de Compras",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),

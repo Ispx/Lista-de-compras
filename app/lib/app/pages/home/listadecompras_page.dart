@@ -1,32 +1,49 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:listadecompras/components/icon_component.dart';
-import 'package:listadecompras/components/sizedbox_component.dart';
-import 'package:listadecompras/controllers/produtoscontroller.dart';
-import 'package:listadecompras/models/listacompras.dart';
-import 'package:listadecompras/models/produto.dart';
+import 'package:listadecompras/app/components/icon_component.dart';
+import 'package:listadecompras/app/components/sizedbox_component.dart';
+import 'package:listadecompras/app/interfaces/sharedpreferences_interface.dart';
+import 'package:listadecompras/app/models/produto.dart';
+import 'package:listadecompras/app/pages/novalista/novalistadecompras_page.dart';
+import 'package:listadecompras/app/services/sharedprefences/shared_local_storege_services.dart';
+import 'package:listadecompras/app/viewmodels/appcontroller_viewmodel.dart';
 
-import 'listadecompras.dart';
+import 'listadecompras_controller.dart';
 
-class Home extends StatefulWidget {
+class ListaDeComprasPage extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _ListaDeComprasPageState createState() => _ListaDeComprasPageState();
 }
 
-class _HomeState extends State<Home> {
+class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
   bool _panelExpanded = false;
-
-  final _controllerMobx = ProdutosController();
+  final ISharedPreferences _sharedPreferences = SharedLocalStoregeServices();
+  final _controllerMobx = ListaDeComprasController();
+  SharedLocalStoregeServices _storegeServices = SharedLocalStoregeServices();
 
   Widget build(BuildContext context) {
+    //_storegeServices.put('nickname', 'Isaque Paixão');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple[700],
         leading: Icon(Icons.shopping_basket),
-        title: Text(
-          "Lista de Compras",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        title: FutureBuilder<String>(
+          future: AppControllerViewModel.instance.nickname.getNickName(),
+          builder: (context, nickname) {
+            if (nickname.hasError || !nickname.hasData) {
+              return Text(
+                "Lista de Compras App",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              );
+            }
+            return Text(
+              "Bem vindo ${nickname.data}",
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            );
+          },
         ),
       ),
       backgroundColor: Colors.purple[500],
@@ -69,7 +86,7 @@ class _HomeState extends State<Home> {
           child: Icon(Icons.shopping_cart_sharp),
           backgroundColor: Colors.purple[900],
           onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => ListaDeCompras()))),
+              .push(MaterialPageRoute(builder: (context) => NovaListaPage()))),
     );
   }
 

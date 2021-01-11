@@ -1,12 +1,11 @@
-import 'package:flutter/foundation.dart';
-import 'package:listadecompras/models/produto.dart';
+import 'package:listadecompras/app/models/produto.dart';
 import 'package:mobx/mobx.dart';
-part 'listaprodutoscontroller.g.dart';
+part 'novalistadecompras_controller.g.dart';
 
-class ListaProdutosController = ListaProdutosControllerBase
-    with _$ListaProdutosController;
+class NovaListaDeComprasController = NovaListaDeComprasControllerBase
+    with _$NovaListaDeComprasController;
 
-abstract class ListaProdutosControllerBase with Store {
+abstract class NovaListaDeComprasControllerBase with Store {
   @observable
   List<Produto> produtos = List<Produto>();
 

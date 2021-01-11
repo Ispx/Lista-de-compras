@@ -1,17 +1,19 @@
-import 'package:listadecompras/models/produto.dart';
-import 'package:listadecompras/models/factorys/produtos_factory.dart';
+import 'package:listadecompras/app/interfaces/databasefactory_interface.dart';
+import 'package:listadecompras/app/models/produto.dart';
+import 'package:listadecompras/app/services/sqflite/factorys/produtos_factory.dart';
 import 'package:mobx/mobx.dart';
-part "produtoscontroller.g.dart";
+part "listadecompras_controller.g.dart";
 
-class ProdutosController = ProdutosControllerBase with _$ProdutosController;
+class ListaDeComprasController = ListaDeComprasControllerBase
+    with _$ListaDeComprasController;
 
-abstract class ProdutosControllerBase with Store {
-  ProdutoFactory _produtoFactory = ProdutoFactory();
+abstract class ListaDeComprasControllerBase with Store {
+  IDatabaseFactory _produtoFactory = ProdutoFactory();
 
   @observable
   Future<List<Produto>> listaDeProdutos;
 
-  ProdutosControllerBase() {
+  ListaDeComprasControllerBase() {
     listaDeProdutos = _obterListaDeProdutos();
   }
 
