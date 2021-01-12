@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -22,7 +23,7 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple[700],
+        backgroundColor: Colors.purple[900],
         leading: Icon(Icons.shopping_basket),
         title: FutureBuilder<String>(
           future: _sharedNickName.getNickName(),
@@ -44,7 +45,7 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
       ),
       backgroundColor: Colors.purple[500],
       body: Container(
-        margin: const EdgeInsets.only(top: 50, right: 2, left: 2, bottom: 80),
+        margin: const EdgeInsets.only(top: 40, right: 2, left: 2, bottom: 40),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -78,10 +79,22 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.shopping_cart_sharp),
-          backgroundColor: Colors.purple[900],
-          onPressed: () => Navigator.of(context).pushNamed('/novalista')),
+      bottomNavigationBar: CurvedNavigationBar(
+        color: Colors.purple[900],
+        height: 60,
+        buttonBackgroundColor: Colors.purple[900],
+        backgroundColor: Colors.purple[500],
+        items: [
+          Icon(
+            Icons.shopping_cart_sharp,
+            color: Colors.white,
+            size: 45,
+          ),
+        ],
+        onTap: (value) {
+          Navigator.pushNamed(context, '/novalista');
+        },
+      ),
     );
   }
 
@@ -93,9 +106,11 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
           padding: const EdgeInsets.all(8.0),
           child: ExpansionPanelList(
             expansionCallback: (panelIndex, isExpanded) {
-              setState(() {
-                _panelExpanded = !isExpanded;
-              });
+              setState(
+                () {
+                  _panelExpanded = !isExpanded;
+                },
+              );
             },
             children: [
               ExpansionPanel(
@@ -121,10 +136,12 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
                     width: infoScreen.maxWidth,
                     height: infoScreen.maxHeight / 2,
                     decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(2),
-                            bottomRight: Radius.circular(2))),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(2),
+                        bottomRight: Radius.circular(2),
+                      ),
+                    ),
                     child: ListView.builder(
                       itemCount: produtos.data.length,
                       itemBuilder: (context, index) {
