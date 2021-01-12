@@ -2,7 +2,7 @@ class Compras {
   int _id;
   String _nome;
 
-  Compras();
+  Compras(this._nome);
 
   fromMap(Map<String, dynamic> map) {
     this._id = map['compras_id'];

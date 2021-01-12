@@ -1,13 +1,17 @@
 import 'package:listadecompras/app/models/produto.dart';
 import 'package:mobx/mobx.dart';
-part 'novalistadecompras_controller.g.dart';
+part 'novosprodutos_controller.g.dart';
 
-class NovaListaDeComprasController = NovaListaDeComprasControllerBase
-    with _$NovaListaDeComprasController;
+class NovosProdutosController = NovosProdutosControllerBase
+    with _$NovosProdutosController;
 
-abstract class NovaListaDeComprasControllerBase with Store {
+abstract class NovosProdutosControllerBase with Store {
   @observable
   List<Produto> produtos = List<Produto>();
+
+  List<Produto> obter() {
+    return produtos;
+  }
 
   @action
   void inserir(Produto produto) {

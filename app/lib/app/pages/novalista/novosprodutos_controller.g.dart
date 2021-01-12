@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'novalistadecompras_controller.dart';
+part of 'novosprodutos_controller.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,10 +8,8 @@ part of 'novalistadecompras_controller.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
-mixin _$NovaListaDeComprasController
-    on NovaListaDeComprasControllerBase, Store {
-  final _$produtosAtom =
-      Atom(name: 'NovaListaDeComprasControllerBase.produtos');
+mixin _$NovosProdutosController on NovosProdutosControllerBase, Store {
+  final _$produtosAtom = Atom(name: 'NovosProdutosControllerBase.produtos');
 
   @override
   List<Produto> get produtos {
@@ -27,7 +25,7 @@ mixin _$NovaListaDeComprasController
   }
 
   final _$incrementAsyncAction =
-      AsyncAction('NovaListaDeComprasControllerBase.increment');
+      AsyncAction('NovosProdutosControllerBase.increment');
 
   @override
   Future<int> increment(int index, Produto produto) {
@@ -35,37 +33,35 @@ mixin _$NovaListaDeComprasController
   }
 
   final _$decrementAsyncAction =
-      AsyncAction('NovaListaDeComprasControllerBase.decrement');
+      AsyncAction('NovosProdutosControllerBase.decrement');
 
   @override
   Future<int> decrement(int index, Produto produto) {
     return _$decrementAsyncAction.run(() => super.decrement(index, produto));
   }
 
-  final _$NovaListaDeComprasControllerBaseActionController =
-      ActionController(name: 'NovaListaDeComprasControllerBase');
+  final _$NovosProdutosControllerBaseActionController =
+      ActionController(name: 'NovosProdutosControllerBase');
 
   @override
   void inserir(Produto produto) {
-    final _$actionInfo = _$NovaListaDeComprasControllerBaseActionController
-        .startAction(name: 'NovaListaDeComprasControllerBase.inserir');
+    final _$actionInfo = _$NovosProdutosControllerBaseActionController
+        .startAction(name: 'NovosProdutosControllerBase.inserir');
     try {
       return super.inserir(produto);
     } finally {
-      _$NovaListaDeComprasControllerBaseActionController
-          .endAction(_$actionInfo);
+      _$NovosProdutosControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   dynamic remover(Produto produto) {
-    final _$actionInfo = _$NovaListaDeComprasControllerBaseActionController
-        .startAction(name: 'NovaListaDeComprasControllerBase.remover');
+    final _$actionInfo = _$NovosProdutosControllerBaseActionController
+        .startAction(name: 'NovosProdutosControllerBase.remover');
     try {
       return super.remover(produto);
     } finally {
-      _$NovaListaDeComprasControllerBaseActionController
-          .endAction(_$actionInfo);
+      _$NovosProdutosControllerBaseActionController.endAction(_$actionInfo);
     }
   }
 

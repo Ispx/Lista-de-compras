@@ -5,10 +5,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:listadecompras/app/components/icon_component.dart';
 import 'package:listadecompras/app/components/sizedbox_component.dart';
+import 'package:listadecompras/app/models/compras.dart';
 import 'package:listadecompras/app/models/produto.dart';
 import 'package:listadecompras/app/viewmodels/nicknamepreferences_viewmodel.dart';
-
 import 'listadecompras_controller.dart';
+import 'listadeprodutos_controller.dart';
 
 class ListaDeComprasPage extends StatefulWidget {
   @override
@@ -17,8 +18,11 @@ class ListaDeComprasPage extends StatefulWidget {
 
 class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
   bool _panelExpanded = false;
-  final _listaDeComprasController = Modular.get<ListaDeComprasController>();
+  final _listaDeComprasController = Modular.get<ListaDeProdutosController>();
   final _sharedNickName = Modular.get<NickNamePreferencesViewModel>();
+  final _novaListaDeComprasController = Modular.get<ListaDeComprasController>();
+  final _inputTextControllerCompras = TextEditingController();
+  final _formKey = GlobalKey<FormFieldState>();
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,14 +89,59 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
         buttonBackgroundColor: Colors.purple[900],
         backgroundColor: Colors.purple[500],
         items: [
-          Icon(
-            Icons.shopping_cart_sharp,
-            color: Colors.white,
-            size: 45,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.shopping_cart_sharp,
+              color: Colors.white,
+              size: 35,
+            ),
           ),
         ],
         onTap: (value) {
-          Navigator.pushNamed(context, '/novalista');
+          if (value == 0) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Nova Lista de compras'),
+                  content: TextFormField(
+                    key: _formKey,
+                    validator: (value) {
+                      if (value.isEmpty || value == null) {
+                        return "Inválido";
+                      }
+                      return null;
+                    },
+                    controller: _inputTextControllerCompras,
+                    maxLength: 44,
+                    decoration: InputDecoration(
+                      hintText: 'Nome da lista',
+                    ),
+                  ),
+                  actions: [
+                    FlatButton(
+                      child: Text('Cancelar'),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    FlatButton(
+                      child: Text('Confirmar'),
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          Compras compras =
+                              Compras(_inputTextControllerCompras.text);
+                          _novaListaDeComprasController.adicionar(compras);
+                          Navigator.pushReplacementNamed(context, '/novalista');
+                        }
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
         },
       ),
     );

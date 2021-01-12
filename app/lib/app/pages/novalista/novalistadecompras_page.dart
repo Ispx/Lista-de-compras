@@ -5,7 +5,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:listadecompras/app/components/icon_component.dart';
 import 'package:listadecompras/app/components/sizedbox_component.dart';
 import 'package:listadecompras/app/models/produto.dart';
-import 'novalistadecompras_controller.dart';
+
+import 'novosprodutos_controller.dart';
 
 class NovaListaPage extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class NovaListaPage extends StatefulWidget {
 }
 
 class _NovaListaPageState extends State<NovaListaPage> {
-  final _produtosController = Modular.get<NovaListaDeComprasController>();
+  final _produtosController = Modular.get<NovosProdutosController>();
   final produtos = List<Produto>();
 
   Widget build(BuildContext contextPrincipal) {

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'listadecompras_controller.dart';
+part of 'listadeprodutos_controller.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,9 +8,9 @@ part of 'listadecompras_controller.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
-mixin _$ListaDeComprasController on ListaDeComprasControllerBase, Store {
+mixin _$ListaDeProdutosController on ListaDeProdutosControllerBase, Store {
   final _$listaDeProdutosAtom =
-      Atom(name: 'ListaDeComprasControllerBase.listaDeProdutos');
+      Atom(name: 'ListaDeProdutosControllerBase.listaDeProdutos');
 
   @override
   Future<List<Produto>> get listaDeProdutos {
@@ -26,7 +26,7 @@ mixin _$ListaDeComprasController on ListaDeComprasControllerBase, Store {
   }
 
   final _$incrementAsyncAction =
-      AsyncAction('ListaDeComprasControllerBase.increment');
+      AsyncAction('ListaDeProdutosControllerBase.increment');
 
   @override
   Future<int> increment(Produto produto) {
@@ -34,7 +34,7 @@ mixin _$ListaDeComprasController on ListaDeComprasControllerBase, Store {
   }
 
   final _$decrementAsyncAction =
-      AsyncAction('ListaDeComprasControllerBase.decrement');
+      AsyncAction('ListaDeProdutosControllerBase.decrement');
 
   @override
   Future<int> decrement(Produto produto) {
@@ -42,7 +42,7 @@ mixin _$ListaDeComprasController on ListaDeComprasControllerBase, Store {
   }
 
   final _$deletarAsyncAction =
-      AsyncAction('ListaDeComprasControllerBase.deletar');
+      AsyncAction('ListaDeProdutosControllerBase.deletar');
 
   @override
   Future<int> deletar(dynamic produto) {
@@ -50,7 +50,7 @@ mixin _$ListaDeComprasController on ListaDeComprasControllerBase, Store {
   }
 
   final _$_obterListaDeProdutosAsyncAction =
-      AsyncAction('ListaDeComprasControllerBase._obterListaDeProdutos');
+      AsyncAction('ListaDeProdutosControllerBase._obterListaDeProdutos');
 
   @override
   Future<List<Produto>> _obterListaDeProdutos() {
@@ -59,7 +59,7 @@ mixin _$ListaDeComprasController on ListaDeComprasControllerBase, Store {
   }
 
   final _$inserirAsyncAction =
-      AsyncAction('ListaDeComprasControllerBase.inserir');
+      AsyncAction('ListaDeProdutosControllerBase.inserir');
 
   @override
   Future<dynamic> inserir(dynamic produto) {
