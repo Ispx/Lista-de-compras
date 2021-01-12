@@ -2,12 +2,12 @@ import 'package:listadecompras/app/services/sharedprefences/shared_local_storege
 
 class NickNamePreferencesViewModel {
   String _key = "nickname";
-  String _nickName;
   SharedLocalStoregeServices _preferences = SharedLocalStoregeServices();
 
-  static NickNamePreferencesViewModel instance = NickNamePreferencesViewModel();
+  static final NickNamePreferencesViewModel instance =
+      NickNamePreferencesViewModel();
 
-  getNickName() {
+  Future getNickName() {
     return _preferences.get(_key);
   }
 

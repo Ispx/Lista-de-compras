@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:listadecompras/app/components/icon_component.dart';
 import 'package:listadecompras/app/components/sizedbox_component.dart';
 import 'package:listadecompras/app/models/produto.dart';
-
 import 'novalistadecompras_controller.dart';
 
 class NovaListaPage extends StatefulWidget {
@@ -13,7 +13,7 @@ class NovaListaPage extends StatefulWidget {
 }
 
 class _NovaListaPageState extends State<NovaListaPage> {
-  final _produtosController = NovaListaDeComprasController();
+  final _produtosController = Modular.get<NovaListaDeComprasController>();
   final produtos = List<Produto>();
 
   Widget build(BuildContext contextPrincipal) {
@@ -55,8 +55,6 @@ class _NovaListaPageState extends State<NovaListaPage> {
                     child: ListView.builder(
                       itemCount: _produtosController.produtos.length,
                       itemBuilder: (context, index) {
-                        print("REBUILD: " +
-                            _produtosController.produtos.toString());
                         List<Produto> lista = _produtosController.produtos;
                         Produto produto = Produto();
                         produto = lista[index];

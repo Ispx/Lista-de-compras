@@ -12,7 +12,6 @@ abstract class NovaListaDeComprasControllerBase with Store {
   @action
   void inserir(Produto produto) {
     produtos.add(produto);
-    print("ACTION INSERIR: " + produtos.toString());
   }
 
   @action

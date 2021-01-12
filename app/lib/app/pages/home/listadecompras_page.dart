@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:listadecompras/app/components/icon_component.dart';
 import 'package:listadecompras/app/components/sizedbox_component.dart';
-import 'package:listadecompras/app/interfaces/sharedpreferences_interface.dart';
 import 'package:listadecompras/app/models/produto.dart';
-import 'package:listadecompras/app/pages/novalista/novalistadecompras_page.dart';
-import 'package:listadecompras/app/services/sharedprefences/shared_local_storege_services.dart';
-import 'package:listadecompras/app/viewmodels/appcontroller_viewmodel.dart';
+import 'package:listadecompras/app/viewmodels/nicknamepreferences_viewmodel.dart';
 
 import 'listadecompras_controller.dart';
 
@@ -18,18 +16,16 @@ class ListaDeComprasPage extends StatefulWidget {
 
 class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
   bool _panelExpanded = false;
-  final ISharedPreferences _sharedPreferences = SharedLocalStoregeServices();
-  final _controllerMobx = ListaDeComprasController();
-  SharedLocalStoregeServices _storegeServices = SharedLocalStoregeServices();
+  final _listaDeComprasController = Modular.get<ListaDeComprasController>();
+  final _sharedNickName = Modular.get<NickNamePreferencesViewModel>();
 
   Widget build(BuildContext context) {
-    //_storegeServices.put('nickname', 'Isaque Paixão');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple[700],
         leading: Icon(Icons.shopping_basket),
         title: FutureBuilder<String>(
-          future: AppControllerViewModel.instance.nickname.getNickName(),
+          future: _sharedNickName.getNickName(),
           builder: (context, nickname) {
             if (nickname.hasError || !nickname.hasData) {
               return Text(
@@ -65,7 +61,7 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
                 child: Observer(
                   builder: (context) => FutureBuilder<List<Produto>>(
                     initialData: [Produto()],
-                    future: _controllerMobx.listaDeProdutos,
+                    future: _listaDeComprasController.listaDeProdutos,
                     builder: (context, produtos) {
                       if (produtos.hasError || produtos.data.length == 0) {
                         return Center(
@@ -85,8 +81,7 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.shopping_cart_sharp),
           backgroundColor: Colors.purple[900],
-          onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => NovaListaPage()))),
+          onPressed: () => Navigator.of(context).pushNamed('/novalista')),
     );
   }
 
@@ -155,15 +150,15 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
                                   iconComponent(
                                     icon: Icons.add,
                                     color: Colors.black,
-                                    function: () =>
-                                        _controllerMobx.increment(produto),
+                                    function: () => _listaDeComprasController
+                                        .increment(produto),
                                   ),
                                   _quantidadeDeProdutos(produto),
                                   iconComponent(
                                     icon: Icons.remove,
                                     color: Colors.black,
-                                    function: () =>
-                                        _controllerMobx.decrement(produto),
+                                    function: () => _listaDeComprasController
+                                        .decrement(produto),
                                   ),
                                 ],
                               ),
