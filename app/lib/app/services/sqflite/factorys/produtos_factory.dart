@@ -52,4 +52,11 @@ class ProdutoFactory implements IDatabaseFactory {
     // TODO: implement getItem
     throw UnimplementedError();
   }
+
+  @override
+  Future<List<Map<String, dynamic>>> lerPorId(id) async {
+    // TODO: implement lerPorId
+    _database = await _futureDatabase;
+    return _database.query(_TABLENAME, where: 'fk_lista = ?', whereArgs: id);
+  }
 }

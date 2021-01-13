@@ -10,4 +10,6 @@ abstract class IDatabaseFactory {
   Future<int> deletar(dynamic values);
 
   Future<void> fechar();
+
+  Future lerPorId(id);
 }

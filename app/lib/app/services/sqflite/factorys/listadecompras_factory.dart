@@ -54,4 +54,10 @@ class ListaDeComprasFactory implements IDatabaseFactory {
     }
     return map;
   }
+
+  @override
+  Future<List<Map<String, dynamic>>> lerPorId(id) {
+    // TODO: implement lerPorId
+    throw UnimplementedError();
+  }
 }

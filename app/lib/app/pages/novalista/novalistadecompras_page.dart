@@ -55,16 +55,17 @@ class _NovaListaPageState extends State<NovaListaPage> {
               Observer(
                 builder: (context) => sizedBoxComponent(
                     height: infoScreen.maxHeight,
-                    child: ListView.builder(
-                      itemCount: _produtosController.produtos.length,
-                      itemBuilder: (context, index) {
-                        List<Produto> lista = _produtosController.produtos;
-                        Produto produto = Produto();
-                        produto = lista[index];
-                        return ListTile(
-                          title: Text(produto.nome),
-                        );
-                      },
+                    child: FutureBuilder<List<Produto>>(
+                      future: _produtosController.lerPorId(_idCompras),
+                      builder: (context, snapshot) => ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          Produto produto = snapshot.data[index];
+                          return ListTile(
+                            title: Text(produto.nome),
+                          );
+                        },
+                      ),
                     )),
               ),
             ],
