@@ -5,7 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:listadecompras/app/components/icon_component.dart';
 import 'package:listadecompras/app/components/sizedbox_component.dart';
-import 'package:listadecompras/app/models/compras.dart';
+import 'package:listadecompras/app/models/lista.dart';
 import 'package:listadecompras/app/models/produto.dart';
 import 'package:listadecompras/app/viewmodels/nicknamepreferences_viewmodel.dart';
 import 'listadecompras_controller.dart';
@@ -128,12 +128,13 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
                     ),
                     FlatButton(
                       child: Text('Confirmar'),
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState.validate()) {
-                          Compras compras =
-                              Compras(_inputTextControllerCompras.text);
-                          _novaListaDeComprasController.adicionar(compras);
-                          Navigator.pushReplacementNamed(context, '/novalista');
+                          Lista lista = Lista(_inputTextControllerCompras.text);
+                          int idLista = await _novaListaDeComprasController
+                              .adicionar(lista.toMap());
+                          Navigator.pushReplacementNamed(context, '/novalista',
+                              arguments: idLista);
                         }
                       },
                     ),

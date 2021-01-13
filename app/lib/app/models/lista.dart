@@ -1,15 +1,15 @@
-class Compras {
+class Lista {
   int _id;
   String _nome;
 
-  Compras(this._nome);
+  Lista(this._nome);
 
   fromMap(Map<String, dynamic> map) {
-    this._id = map['compras_id'];
+    this._id = map['lista_id'];
     this._nome = map['nome'];
   }
 
   Map<String, dynamic> toMap() {
-    return {'id': this._id, 'nome': this._nome};
+    return {'lista_id': this._id, 'nome': this._nome};
   }
 }

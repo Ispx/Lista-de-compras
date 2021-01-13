@@ -7,7 +7,7 @@ class ListaDeComprasFactory implements IDatabaseFactory {
   Future<Database> _futureDatabase;
   Database _database;
 
-  ListaComprasFactory() {
+  ListaDeComprasFactory() {
     this._futureDatabase = CreateDatabaseService.instance.createDatabaseApp();
   }
 

@@ -18,6 +18,8 @@ class _NovaListaPageState extends State<NovaListaPage> {
   final produtos = List<Produto>();
 
   Widget build(BuildContext contextPrincipal) {
+    final int _idCompras = ModalRoute.of(context).settings.arguments;
+    print("ID COMPRAS: " + _idCompras.toString());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple[700],
