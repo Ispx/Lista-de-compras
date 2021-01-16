@@ -9,7 +9,7 @@ class Lista {
   }
 
   get nome => _nome;
-
+  int id() => _id;
   fromMap(Map<String, dynamic> map) {
     this._id = map['lista_id'];
     this._nome = map['nome'];

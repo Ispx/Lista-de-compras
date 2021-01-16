@@ -1,4 +1,5 @@
 import 'package:listadecompras/app/interfaces/databasefactory_interface.dart';
+import 'package:listadecompras/app/models/lista.dart';
 import 'package:listadecompras/app/services/sqflite/createdatabase.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -59,5 +60,19 @@ class ListaDeComprasFactory implements IDatabaseFactory {
   Future<List<Map<String, dynamic>>> lerPorId(id) {
     // TODO: implement lerPorId
     throw UnimplementedError();
+  }
+
+  Future<List<Lista>> listaDeCompras() async {
+    List<Lista> listas = List();
+    Lista lista = Lista();
+    Map map;
+    List<Map<String, dynamic>> maps = await ler();
+
+    for (map in maps) {
+      lista.fromMap(map);
+      listas.add(lista);
+    }
+
+    return listas;
   }
 }
