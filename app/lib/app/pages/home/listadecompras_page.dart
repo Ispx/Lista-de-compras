@@ -71,58 +71,134 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
                 bottomLeft: Radius.circular(10),
                 bottomRight: Radius.circular(10)),
           ),
-          child: ExpansionPanelList(
-            expansionCallback: (panelIndex, isExpanded) {
-              setState(
-                () {
-                  _panelExpanded = !isExpanded;
-                },
-              );
-            },
-            children: [
-              ExpansionPanel(
-                canTapOnHeader: true,
-                isExpanded: _panelExpanded,
-                backgroundColor: Colors.purple[500],
-                headerBuilder: (context, isExpanded) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'dsazz',
-                      style: TextStyle(
-                        color: Colors.yellow,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                  );
-                },
-                body: FutureBuilder<Iterable<Produto>>(
-                  future: _produtoFactory.produtosId(2),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData || snapshot.hasError) {
-                      return Center(
-                        child: Text("Nenhum produto encontrado"),
-                      );
-                    }
-                    return Container(
-                      height: 200,
-                      child: ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          List<Produto> produtosId = snapshot.data.toList();
-                          Produto produto = produtosId[index];
-                          return ListTile(
-                            title: Text(produto.nome),
+          child: FutureBuilder(
+              future: _listasDeCompras.listaDeCompras(),
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                  case ConnectionState.waiting:
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                    break;
+                  case ConnectionState.active:
+                    // TODO: Handle this case.
+                    break;
+                  case ConnectionState.done:
+                    return ExpansionPanelList(
+                      expansionCallback: (panelIndex, isExpanded) {
+                        setState(
+                          () {
+                            _panelExpanded = !isExpanded;
+                          },
+                        );
+                      },
+                      children: [
+                        ExpansionPanel(
+                          canTapOnHeader: true,
+                          isExpanded: _panelExpanded,
+                          backgroundColor: Colors.purple[500],
+                          headerBuilder: (context, isExpanded) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'dsazz',
+                                style: TextStyle(
+                                  color: Colors.yellow,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            );
+                          },
+                          body: FutureBuilder<Iterable<Produto>>(
+                            future: _produtoFactory.produtosId(2),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData || snapshot.hasError) {
+                                return Center(
+                                  child: Text("Nenhum produto encontrado"),
+                                );
+                              }
+                              return Container(
+                                height: 200,
+                                child: ListView.builder(
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: (context, index) {
+                                    List<Produto> produtosId =
+                                        snapshot.data.toList();
+                                    Produto produto = produtosId[index];
+                                    return ListTile(
+                                      title: Text(produto.nome),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                    break;
+                  default:
+                    return Center(
+                      child: Text(
+                          "Não foi possível recuperar a lista de produtos"),
+                    );
+                }
+                return ExpansionPanelList(
+                  expansionCallback: (panelIndex, isExpanded) {
+                    setState(
+                      () {
+                        _panelExpanded = !isExpanded;
+                      },
+                    );
+                  },
+                  children: [
+                    ExpansionPanel(
+                      canTapOnHeader: true,
+                      isExpanded: _panelExpanded,
+                      backgroundColor: Colors.purple[500],
+                      headerBuilder: (context, isExpanded) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'dsazz',
+                            style: TextStyle(
+                              color: Colors.yellow,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                        );
+                      },
+                      body: FutureBuilder<Iterable<Produto>>(
+                        future: _produtoFactory.produtosId(2),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData || snapshot.hasError) {
+                            return Center(
+                              child: Text("Nenhum produto encontrado"),
+                            );
+                          }
+                          return Container(
+                            height: 200,
+                            child: ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                List<Produto> produtosId =
+                                    snapshot.data.toList();
+                                Produto produto = produtosId[index];
+                                return ListTile(
+                                  title: Text(produto.nome),
+                                );
+                              },
+                            ),
                           );
                         },
                       ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+                    ),
+                  ],
+                );
+              }),
         ),
       ),
       bottomNavigationBar: CurvedNavigationBar(
@@ -312,3 +388,47 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
     );
   }
 }
+
+/*
+ExpansionPanel(
+                canTapOnHeader: true,
+                isExpanded: _panelExpanded,
+                backgroundColor: Colors.purple[500],
+                headerBuilder: (context, isExpanded) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'dsazz',
+                      style: TextStyle(
+                        color: Colors.yellow,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  );
+                },
+                body: FutureBuilder<Iterable<Produto>>(
+                  future: _produtoFactory.produtosId(2),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.hasError) {
+                      return Center(
+                        child: Text("Nenhum produto encontrado"),
+                      );
+                    }
+                    return Container(
+                      height: 200,
+                      child: ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          List<Produto> produtosId = snapshot.data.toList();
+                          Produto produto = produtosId[index];
+                          return ListTile(
+                            title: Text(produto.nome),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+*/
