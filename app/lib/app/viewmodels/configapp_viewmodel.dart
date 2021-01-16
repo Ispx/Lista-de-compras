@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:listadecompras/app/pages/home/listadecompras_page.dart';
 
 class ConfigAppViewModel extends StatelessWidget {
   static final ConfigAppViewModel instance = ConfigAppViewModel();

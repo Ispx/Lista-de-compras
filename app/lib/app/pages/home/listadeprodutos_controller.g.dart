@@ -49,13 +49,13 @@ mixin _$ListaDeProdutosController on ListaDeProdutosControllerBase, Store {
     return _$deletarAsyncAction.run(() => super.deletar(produto));
   }
 
-  final _$_obterListaDeProdutosAsyncAction =
-      AsyncAction('ListaDeProdutosControllerBase._obterListaDeProdutos');
+  final _$obterListaDeProdutosAsyncAction =
+      AsyncAction('ListaDeProdutosControllerBase.obterListaDeProdutos');
 
   @override
-  Future<List<Produto>> _obterListaDeProdutos() {
-    return _$_obterListaDeProdutosAsyncAction
-        .run(() => super._obterListaDeProdutos());
+  Future<List<Produto>> obterListaDeProdutos() {
+    return _$obterListaDeProdutosAsyncAction
+        .run(() => super.obterListaDeProdutos());
   }
 
   final _$inserirAsyncAction =
@@ -64,6 +64,14 @@ mixin _$ListaDeProdutosController on ListaDeProdutosControllerBase, Store {
   @override
   Future<dynamic> inserir(dynamic produto) {
     return _$inserirAsyncAction.run(() => super.inserir(produto));
+  }
+
+  final _$produtosIdAsyncAction =
+      AsyncAction('ListaDeProdutosControllerBase.produtosId');
+
+  @override
+  Future<Iterable<Produto>> produtosId(int id) {
+    return _$produtosIdAsyncAction.run(() => super.produtosId(id));
   }
 
   @override

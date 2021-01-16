@@ -5,10 +5,13 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:listadecompras/app/components/icon_component.dart';
 import 'package:listadecompras/app/components/sizedbox_component.dart';
 import 'package:listadecompras/app/models/produto.dart';
+import 'package:listadecompras/app/pages/home/listadecompras_controller.dart';
 
 import 'novosprodutos_controller.dart';
 
 class NovaListaPage extends StatefulWidget {
+  String nome;
+  NovaListaPage({this.nome});
   @override
   _NovaListaPageState createState() => _NovaListaPageState();
 }
@@ -16,6 +19,7 @@ class NovaListaPage extends StatefulWidget {
 class _NovaListaPageState extends State<NovaListaPage> {
   final _produtosController = Modular.get<NovosProdutosController>();
   final produtos = List<Produto>();
+  final _listaDeComprasController = Modular.get<ListaDeComprasController>();
 
   Widget build(BuildContext contextPrincipal) {
     final int _idCompras = ModalRoute.of(context).settings.arguments;
@@ -23,14 +27,18 @@ class _NovaListaPageState extends State<NovaListaPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple[700],
-        title: Text("Nova Lista de Compras",
+        title: Text(widget.nome,
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
               child: Icon(Icons.sd_card_sharp),
-              onTap: () {},
+              onTap: () {
+                _produtosController.salvarBancoDeDados().then((value) {
+                  Modular.to.pushNamedAndRemoveUntil('/', (p) => false);
+                });
+              },
             ),
           )
         ],
@@ -49,24 +57,23 @@ class _NovaListaPageState extends State<NovaListaPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 8, right: 8),
-                child:
-                    sizedBoxComponent(child: formularioProduto(), height: 80),
+                child: sizedBoxComponent(
+                    child: formularioProduto(_idCompras), height: 80),
               ),
               Observer(
                 builder: (context) => sizedBoxComponent(
-                    height: infoScreen.maxHeight,
-                    child: FutureBuilder<List<Produto>>(
-                      future: _produtosController.lerPorId(_idCompras),
-                      builder: (context, snapshot) => ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          Produto produto = snapshot.data[index];
-                          return ListTile(
-                            title: Text(produto.nome),
-                          );
-                        },
-                      ),
-                    )),
+                  height: infoScreen.maxHeight,
+                  child: ListView.builder(
+                    itemCount: _produtosController.listaDeProduto.length,
+                    itemBuilder: (context, index) {
+                      Produto produto =
+                          _produtosController.listaDeProduto[index];
+                      return ListTile(
+                        title: Text(produto.nome),
+                      );
+                    },
+                  ),
+                ),
               ),
             ],
           ),
@@ -75,7 +82,7 @@ class _NovaListaPageState extends State<NovaListaPage> {
     );
   }
 
-  formularioProduto() {
+  formularioProduto(int idCompras) {
     final TextEditingController _controller = TextEditingController();
     final _formKey = GlobalKey<FormState>();
     return Form(
@@ -96,7 +103,13 @@ class _NovaListaPageState extends State<NovaListaPage> {
               if (_formKey.currentState.validate()) {
                 Produto produto = Produto();
                 produto.setNome(_controller.text);
+                produto.setFkLista(idCompras);
                 _produtosController.inserir(produto);
+                _produtosController.lerPorId(2).then((value) {
+                  value.forEach((element) {
+                    print(element.toString());
+                  });
+                });
                 _formKey.currentState.reset();
               }
             },

@@ -2,7 +2,13 @@ class Lista {
   int _id;
   String _nome;
 
-  Lista(this._nome);
+  Lista();
+
+  setNome(String nome) {
+    _nome = nome;
+  }
+
+  get nome => _nome;
 
   fromMap(Map<String, dynamic> map) {
     this._id = map['lista_id'];

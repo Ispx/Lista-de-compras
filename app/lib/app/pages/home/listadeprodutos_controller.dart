@@ -14,13 +14,13 @@ abstract class ListaDeProdutosControllerBase with Store {
   Future<List<Produto>> listaDeProdutos;
 
   ListaDeComprasControllerBase() {
-    listaDeProdutos = _obterListaDeProdutos();
+    listaDeProdutos = obterListaDeProdutos();
   }
 
   @action
   Future<int> increment(Produto produto) async {
     _produtoFactory.atualizar(produto.id, produto);
-    listaDeProdutos = _obterListaDeProdutos();
+    listaDeProdutos = obterListaDeProdutos();
 
     return 0;
   }
@@ -32,19 +32,19 @@ abstract class ListaDeProdutosControllerBase with Store {
     }
     produto.quantidade--;
     _produtoFactory.atualizar(produto.id, produto);
-    listaDeProdutos = _obterListaDeProdutos();
+    listaDeProdutos = obterListaDeProdutos();
     return 0;
   }
 
   @action
   Future<int> deletar(produto) async {
     int id = await _produtoFactory.deletar(produto.id);
-    listaDeProdutos = _obterListaDeProdutos();
+    listaDeProdutos = obterListaDeProdutos();
     return id;
   }
 
   @action
-  Future<List<Produto>> _obterListaDeProdutos() async {
+  Future<List<Produto>> obterListaDeProdutos() async {
     List<Map<String, dynamic>> produtos = await _produtoFactory.ler();
     List<Produto> listaDeProdutos = List<Produto>();
     for (Map<String, dynamic> map in produtos) {
@@ -58,6 +58,26 @@ abstract class ListaDeProdutosControllerBase with Store {
   @action
   Future<dynamic> inserir(produto) async {
     await _produtoFactory.inserir(produto);
-    listaDeProdutos = _obterListaDeProdutos();
+    listaDeProdutos = obterListaDeProdutos();
+  }
+
+  @action
+  Future<Iterable<Produto>> produtosId(int id) async {
+    List<Map<String, dynamic>> produtos = await _produtoFactory.ler();
+    List<Produto> listaDeProdutos = List<Produto>();
+    List<Produto> listaDeProdutosWhere = List<Produto>();
+    for (Map<String, dynamic> map in produtos) {
+      Produto produto = Produto();
+      produto.fromMap(map);
+      listaDeProdutos.add(produto);
+    }
+
+    var produtosWhere =
+        listaDeProdutos.where((element) => element.fklista == id);
+    for (Produto produto in produtosWhere) {
+      listaDeProdutosWhere.add(produto);
+    }
+
+    return listaDeProdutos.where((element) => element.fklista == id);
   }
 }

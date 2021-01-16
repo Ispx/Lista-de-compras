@@ -11,5 +11,5 @@ abstract class IDatabaseFactory {
 
   Future<void> fechar();
 
-  Future lerPorId(id);
+  Future<List<Map<String, dynamic>>> lerPorId(id);
 }

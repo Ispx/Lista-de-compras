@@ -16,7 +16,11 @@ class Produto {
     this._nome = nome;
   }
 
-  get id => this._id;
+  setFkLista(int id) {
+    this._fklista = id;
+  }
+
+  int get id => this._id;
   Map<String, dynamic> toMap() {
     return {
       'produto_id': _id,
@@ -26,6 +30,7 @@ class Produto {
     };
   }
 
+  get fklista => _fklista;
   void fromMap(Map<String, dynamic> map) {
     this._id = map['produto_id'];
     this._nome = map['nome'];

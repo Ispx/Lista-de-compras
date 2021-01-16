@@ -7,31 +7,36 @@ class NovosProdutosController = NovosProdutosControllerBase
     with _$NovosProdutosController;
 
 abstract class NovosProdutosControllerBase with Store {
+  ProdutoFactory _produtoFactory = ProdutoFactory();
   @observable
-  ProdutoFactory produtos = ProdutoFactory();
-
+  ObservableList<Produto> listaDeProduto = ObservableList();
   @action
   Future<List<Produto>> lerPorId(int id) async {
     List<Produto> produtosList;
-    List<Map<String, dynamic>> futureMap = await produtos.lerPorId(id);
-
+    List<Map<String, dynamic>> futureMap = await _produtoFactory.lerPorId(id);
     for (Map map in futureMap) {
       Produto produto = Produto();
       produto.fromMap(map);
       produtosList.add(produto);
     }
-
     return produtosList;
+  }
+
+  Future<void> salvarBancoDeDados() async {
+    for (Produto produto in listaDeProduto) {
+      await _produtoFactory.inserir(produto);
+    }
   }
 
   @action
   void inserir(Produto produto) {
-    produtos.inserir(produto);
+    listaDeProduto.add(produto);
   }
 
   @action
   remover(Produto produto) {
-    produtos.deletar(produto);
+    _produtoFactory.deletar(produto);
+    listaDeProduto.remove(produto);
   }
 
   @action

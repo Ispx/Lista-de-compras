@@ -7,6 +7,7 @@ import 'package:listadecompras/app/components/icon_component.dart';
 import 'package:listadecompras/app/components/sizedbox_component.dart';
 import 'package:listadecompras/app/models/lista.dart';
 import 'package:listadecompras/app/models/produto.dart';
+import 'package:listadecompras/app/services/sqflite/factorys/produtos_factory.dart';
 import 'package:listadecompras/app/viewmodels/nicknamepreferences_viewmodel.dart';
 import 'listadecompras_controller.dart';
 import 'listadeprodutos_controller.dart';
@@ -21,10 +22,21 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
   final _listaDeComprasController = Modular.get<ListaDeProdutosController>();
   final _sharedNickName = Modular.get<NickNamePreferencesViewModel>();
   final _novaListaDeComprasController = Modular.get<ListaDeComprasController>();
+  final _listasDeCompras = Modular.get<ListaDeComprasController>();
   final _inputTextControllerCompras = TextEditingController();
   final _formKey = GlobalKey<FormFieldState>();
-
+  ListaDeProdutosController _produtoFactory = ListaDeProdutosController();
   Widget build(BuildContext context) {
+    _listasDeCompras.listaDeCompras().then((value) {
+      value.forEach((element) {
+        print("Nome da Lista: " + element.toString());
+      });
+    });
+    _produtoFactory.produtosId(2).then((value) {
+      value.where((element) => element.fklista == 2).forEach((element) {
+        print("Nome do produto: " + element.toString());
+      });
+    });
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple[900],
@@ -48,35 +60,65 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
         ),
       ),
       backgroundColor: Colors.purple[500],
-      body: Container(
-        margin: const EdgeInsets.only(top: 40, right: 2, left: 2, bottom: 40),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-              bottomLeft: Radius.circular(10),
-              bottomRight: Radius.circular(10)),
-        ),
-        child: LayoutBuilder(
-          builder: (context, infoScreen) => ListView(
+      body: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.only(top: 40, right: 2, left: 2, bottom: 40),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10)),
+          ),
+          child: ExpansionPanelList(
+            expansionCallback: (panelIndex, isExpanded) {
+              setState(
+                () {
+                  _panelExpanded = !isExpanded;
+                },
+              );
+            },
             children: [
-              sizedBoxComponent(
-                height: infoScreen.maxHeight,
-                child: Observer(
-                  builder: (context) => FutureBuilder<List<Produto>>(
-                    initialData: [Produto()],
-                    future: _listaDeComprasController.listaDeProdutos,
-                    builder: (context, produtos) {
-                      if (produtos.hasError || produtos.data.length == 0) {
-                        return Center(
-                          child: Text("Nenhum produto identificado"),
-                        );
-                      }
-                      return _expansionPanelListProdutos(
-                          context, produtos, infoScreen);
-                    },
-                  ),
+              ExpansionPanel(
+                canTapOnHeader: true,
+                isExpanded: _panelExpanded,
+                backgroundColor: Colors.purple[500],
+                headerBuilder: (context, isExpanded) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'dsazz',
+                      style: TextStyle(
+                        color: Colors.yellow,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  );
+                },
+                body: FutureBuilder<Iterable<Produto>>(
+                  future: _produtoFactory.produtosId(2),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.hasError) {
+                      return Center(
+                        child: Text("Nenhum produto encontrado"),
+                      );
+                    }
+                    return Container(
+                      height: 200,
+                      child: ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          List<Produto> produtosId = snapshot.data.toList();
+                          Produto produto = produtosId[index];
+                          return ListTile(
+                            title: Text(produto.nome),
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -130,10 +172,11 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
                       child: Text('Confirmar'),
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
-                          Lista lista = Lista(_inputTextControllerCompras.text);
+                          Lista lista = Lista();
+                          lista.setNome(_inputTextControllerCompras.text);
                           int idLista = await _novaListaDeComprasController
                               .adicionar(lista.toMap());
-                          Navigator.pushReplacementNamed(context, '/novalista',
+                          Modular.to.pushNamed('/novalista/${lista.nome}',
                               arguments: idLista);
                         }
                       },
@@ -149,7 +192,7 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
   }
 
   _expansionPanelListProdutos(BuildContext context,
-      AsyncSnapshot<List<Produto>> produtos, BoxConstraints infoScreen) {
+      AsyncSnapshot<List<Lista>> listas, BoxConstraints infoScreen) {
     return SingleChildScrollView(
       child: Observer(
         builder: (context) => Padding(
@@ -162,82 +205,89 @@ class _ListaDeComprasPageState extends State<ListaDeComprasPage> {
                 },
               );
             },
-            children: [
-              ExpansionPanel(
-                canTapOnHeader: true,
-                isExpanded: _panelExpanded,
-                backgroundColor: Colors.purple[500],
-                headerBuilder: (context, isExpanded) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "Lista de Compras",
-                      style: TextStyle(
-                        color: Colors.yellow,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
+            children: listas.data.map<ExpansionPanel>(
+              (e) {
+                return ExpansionPanel(
+                  canTapOnHeader: true,
+                  isExpanded: _panelExpanded,
+                  backgroundColor: Colors.purple[500],
+                  headerBuilder: (context, isExpanded) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        e.nome.toString(),
+                        style: TextStyle(
+                          color: Colors.yellow,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
                       ),
-                    ),
-                  );
-                },
-                body: sizedBoxComponent(
-                  height: infoScreen.maxHeight / 2,
-                  child: Container(
-                    width: infoScreen.maxWidth,
+                    );
+                  },
+                  body: sizedBoxComponent(
                     height: infoScreen.maxHeight / 2,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(2),
-                        bottomRight: Radius.circular(2),
+                    child: Container(
+                      width: infoScreen.maxWidth,
+                      height: infoScreen.maxHeight / 2,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(2),
+                          bottomRight: Radius.circular(2),
+                        ),
                       ),
-                    ),
-                    child: ListView.builder(
-                      itemCount: produtos.data.length,
-                      itemBuilder: (context, index) {
-                        Produto produto = produtos.data[index];
-                        return ListTile(
-                          leading: iconComponent(
-                              icon: Icons.shopping_basket_sharp,
-                              color: Colors.orange,
-                              function: null),
-                          title: Text(
-                            produto.nome.toString().toUpperCase(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          trailing: LayoutBuilder(
-                            builder: (context, constraint) => Container(
-                              width: constraint.maxWidth / 4,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  iconComponent(
-                                    icon: Icons.add,
-                                    color: Colors.black,
-                                    function: () => _listaDeComprasController
-                                        .increment(produto),
-                                  ),
-                                  _quantidadeDeProdutos(produto),
-                                  iconComponent(
-                                    icon: Icons.remove,
-                                    color: Colors.black,
-                                    function: () => _listaDeComprasController
-                                        .decrement(produto),
-                                  ),
-                                ],
+                      child: FutureBuilder<List<Produto>>(
+                        future: _listaDeComprasController.listaDeProdutos,
+                        builder: (context, produtos) => ListView.builder(
+                          itemCount: produtos.data.length,
+                          itemBuilder: (context, index) {
+                            Produto produto = produtos.data[index];
+                            return ListTile(
+                              leading: iconComponent(
+                                  icon: Icons.shopping_basket_sharp,
+                                  color: Colors.orange,
+                                  function: null),
+                              title: Text(
+                                produto.nome.toString().toUpperCase(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-                      },
+                              trailing: LayoutBuilder(
+                                builder: (context, constraint) => Container(
+                                  width: constraint.maxWidth / 4,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      iconComponent(
+                                        icon: Icons.add,
+                                        color: Colors.black,
+                                        function: () =>
+                                            _listaDeComprasController
+                                                .increment(produto),
+                                      ),
+                                      _quantidadeDeProdutos(produto),
+                                      iconComponent(
+                                        icon: Icons.remove,
+                                        color: Colors.black,
+                                        function: () =>
+                                            _listaDeComprasController
+                                                .decrement(produto),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
+                );
+              },
+            ),
           ),
         ),
       ),

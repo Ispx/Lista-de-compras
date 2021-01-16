@@ -28,6 +28,9 @@ class AppModularViewModel extends MainModule {
   // TODO: implement routers
   List<ModularRouter> get routers => [
         ModularRouter('/', child: (context, args) => ListaDeComprasPage()),
-        ModularRouter('/novalista', child: (context, args) => NovaListaPage())
+        ModularRouter('/novalista/:nome',
+            child: (context, args) => NovaListaPage(
+                  nome: args.params['nome'],
+                ))
       ];
 }
